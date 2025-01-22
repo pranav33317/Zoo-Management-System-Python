@@ -1,0 +1,302 @@
+# Constants for Admin credentials
+ADMIN_USERNAME = "admin"
+ADMIN_PASSWORD = "admin123"
+
+class Attraction:
+    def __init__(self, attraction_id, name, description, price=0):
+        self.__attraction_id = attraction_id
+        self.__name = name
+        self.__description = description
+        self.__price = price
+        self.__ticket_count = 0
+
+    @property
+    def attraction_id(self):
+        return self.__attraction_id
+
+    @attraction_id.setter
+    def attraction_id(self, value):
+        self.__attraction_id = value
+
+    @property
+    def name(self):
+        return self.__name
+
+    @name.setter
+    def name(self, value):
+        self.__name = value
+
+    @property
+    def description(self):
+        return self.__description
+
+    @description.setter
+    def description(self, value):
+        self.__description = value
+
+    @property
+    def price(self):
+        return self.__price
+
+    @price.setter
+    def price(self, value):
+        self.__price = value
+
+    @property
+    def ticket_count(self):
+        return self.__ticket_count
+
+    def increment_ticket_count(self):
+        self.__ticket_count += 1
+
+
+class Animal:
+    def __init__(self, name, animal_type):
+        self.__name = name
+        self.__animal_type = animal_type
+
+    @property
+    def name(self):
+        return self.__name
+
+    @name.setter
+    def name(self, value):
+        self.__name = value
+
+    @property
+    def animal_type(self):
+        return self.__animal_type
+
+    @animal_type.setter
+    def animal_type(self, value):
+        self.__animal_type = value
+
+    def make_sound(self):
+        if self.__animal_type == 'Mammal':
+            return f'{self.__name} makes a sound like a mammal.'
+        elif self.__animal_type == 'Amphibian':
+            return f'{self.__name} croaks like an amphibian.'
+        elif self.__animal_type == 'Reptile':
+            return f'{self.__name} hisses like a reptile.'
+        else:
+            return f'{self.__name} makes an unknown sound.'
+
+
+class Discount:
+    def __init__(self, discount_type, percentage, code):
+        self.__discount_type = discount_type
+        self.__percentage = percentage
+        self.__code = code
+
+    @property
+    def discount_type(self):
+        return self.__discount_type
+
+    @discount_type.setter
+    def discount_type(self, value):
+        self.__discount_type = value
+
+    @property
+    def percentage(self):
+        return self.__percentage
+
+    @percentage.setter
+    def percentage(self, value):
+        self.__percentage = value
+
+    @property
+    def code(self):
+        return self.__code
+
+    @code.setter
+    def code(self, value):
+        self.__code = value
+
+
+class Visitor:
+    def __init__(self, name, age, phone, balance, email, password):
+        self.__name = name
+        self.__age = age
+        self.__phone = phone
+        self.__balance = balance
+        self.__email = email
+        self.__password = password
+        self.__membership = None
+        self.__visited_attractions = []
+        self.__tickets = []
+
+    @property
+    def name(self):
+        return self.__name
+
+    @property
+    def age(self):
+        return self.__age
+
+    @property
+    def phone(self):
+        return self.__phone
+
+    @property
+    def balance(self):
+        return self.__balance
+
+    @property
+    def email(self):
+        return self.__email
+
+    @property
+    def password(self):
+        return self.__password
+
+    @property
+    def membership(self):
+        return self.__membership
+
+    @membership.setter
+    def membership(self, value):
+        self.__membership = value
+
+    @property
+    def tickets(self):
+        return self.__tickets
+
+    def add_ticket(self, ticket):
+        self.__tickets.append(ticket)
+
+    def buy_membership(self, membership):
+        if self.__balance >= membership.price:
+            self.__membership = membership
+            self.__balance -= membership.price
+            print(f"Membership purchased successfully! Remaining balance: ₹{self.__balance}")
+        else:
+            print("Insufficient balance to buy membership.")
+
+    def buy_ticket(self, attraction):
+        if self.__membership and self.__membership.membership_level == 'Basic':
+            if self.__balance >= attraction.price:
+                self.add_ticket(attraction)
+                self.__balance -= attraction.price
+                print(f"Ticket for {attraction.name} purchased successfully! Remaining balance: ₹{self.__balance}")
+            else:
+                print("Insufficient balance to buy ticket.")
+        else:
+            print("Premium members don't need to buy separate tickets for attractions.")
+
+
+class Membership:
+    def __init__(self, membership_level, price):
+        self.__membership_level = membership_level
+        self.__price = price
+
+    @property
+    def membership_level(self):
+        return self.__membership_level
+
+    @property
+    def price(self):
+        return self.__price
+
+
+class Admin:
+    def __init__(self):
+        self.__attractions = []
+        self.__animals = []
+        self.__discounts = []
+        self.__special_deals = []
+
+    def add_attraction(self, attraction):
+        self.__attractions.append(attraction)
+
+    def remove_attraction(self, attraction):
+        self.__attractions.remove(attraction)
+
+    def add_animal(self, animal):
+        self.__animals.append(animal)
+
+    def remove_animal(self, animal):
+        self.__animals.remove(animal)
+
+    def set_discount(self, discount):
+        self.__discounts.append(discount)
+
+    def set_special_deal(self, deal):
+        self.__special_deals.append(deal)
+
+    def view_attractions(self):
+        for attraction in self.__attractions:
+            print(f"Attraction ID: {attraction.attraction_id}, Name: {attraction.name}, Price: ₹{attraction.price}")
+
+    def view_animals(self):
+        for animal in self.__animals:
+            print(f"Animal Name: {animal.name}, Type: {animal.animal_type}")
+
+    def view_discounts(self):
+        for discount in self.__discounts:
+            print(f"Discount Type: {discount.discount_type}, Percentage: {discount.percentage}%")
+
+    def view_special_deals(self):
+        for deal in self.__special_deals:
+            print(f"Deal: {deal}")
+
+
+class ZooBuddies:
+    def __init__(self):
+        self.__admin = Admin()
+        self.__visitors = []
+
+    def add_visitor(self, visitor):
+        self.__visitors.append(visitor)
+
+    def login_visitor(self, email, password):
+        for visitor in self.__visitors:
+            if visitor.email == email and visitor.password == password:
+                print("Login successful!")
+                return visitor
+        print("Login failed. Invalid email or password.")
+        return None
+
+
+def main():
+    zoo = ZooBuddies()
+
+    # Create attractions
+    attraction1 = Attraction(1, "Jungle Safari", "A thrilling adventure in the jungle", 10)
+    attraction2 = Attraction(2, "Botanical Garden", "A lush garden of rare plants", 15)
+    zoo._ZooBuddies__admin.add_attraction(attraction1)
+    zoo._ZooBuddies__admin.add_attraction(attraction2)
+
+    # Create animals
+    animal1 = Animal("Lion", "Mammal")
+    animal2 = Animal("Elephant", "Mammal")
+    zoo._ZooBuddies__admin.add_animal(animal1)
+    zoo._ZooBuddies__admin.add_animal(animal2)
+
+    # Create discounts
+    discount1 = Discount("Minor", 10, "MINOR10")
+    zoo._ZooBuddies__admin.set_discount(discount1)
+
+    # Create visitor and buy membership
+    visitor1 = Visitor("Alice", 30, "1234567890", 100, "alice@email.com", "password")
+    zoo.add_visitor(visitor1)
+
+    # Visitor login
+    logged_in_visitor = zoo.login_visitor("alice@email.com", "password")
+
+    if logged_in_visitor:
+        # Visitor buys membership
+        membership = Membership("Premium", 50)
+        logged_in_visitor.buy_membership(membership)
+
+        # Visitor buys ticket
+        logged_in_visitor.buy_ticket(attraction1)
+
+        # View zoo attractions
+        zoo._ZooBuddies__admin.view_attractions()
+
+        # View available discounts
+        zoo._ZooBuddies__admin.view_discounts()
+
+
+if __name__ == "__main__":
+    main()
